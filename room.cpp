@@ -11,13 +11,17 @@ void Room::setName(const char* setName){
   return;
 }
 
-void Room::initItem(const char* itemName){
-  Item item;
-  item.name = (char*)itemName;
-  cout << itemName << endl;
-  Item* iptr = &item;
-  cout << iptr << endl;
-  cout << iptr->name << endl;
-  itemList.push_back(iptr);
+void Room::describeRoom(){
+  cout << "You are in the " << name << "." << endl;
+  
+
+  for(Item* item : itemList){
+    cout << "There is a " << item->name << " here." << endl;
+  }
+  
+  for(map<const char*,Room>::iterator it = exits.begin(); it != exits.end(); ++it){
+    cout << it->second << endl;
+  }
+
   return;
 }

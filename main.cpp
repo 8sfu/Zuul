@@ -7,28 +7,40 @@
 
 using namespace std;
 
+void rName(Room room, const char* newName){
+  room.name = (char*)newName;
+}
+
+void iName(Item item, const char* newName){
+  item.name = (char*)newName;
+}
+
 int main() {
 
   cout << "Welcome to Zuul" << endl;
   Room currentRoom;
+  vector<Item*> inventory;
+
+  Item shovel;
+  iName(shovel,"shovel");
+  Item* shovelPtr = &shovel;
+
 
   Room kitchen;
-  kitchen.setName("kitchen");
-  cout << "The room is named: " << kitchen.name << endl;
-  
-  kitchen.initItem("shovel");
-  for(Item* iptr : kitchen.itemList){
-    // tool->name = (char*)"spork";
-    cout << iptr << endl;
-    cout << "There is a " << iptr->name << " in the " << kitchen.name << endl;
-  }
-
+  rName(kitchen,"kitchen");
+  kitchen.itemList.push_back(shovelPtr);
   currentRoom = kitchen;
+  
+  Room hallway;
+  rName(hallway,"hallway");
+  
+  Room diningRoom;
+  rName(diningRoom,"dining room");
 
+  kitchen.exits["north"] = hallway;
+  kitchen.exits["west"] = diningRoom;
 
-
-
-
+  currentRoom.describeRoom();
 
   return 0;
 }
