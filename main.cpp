@@ -133,7 +133,7 @@ int main() {
   Item* debug = newItem("debug",30);
   Item* gun = newItem("chekhov's gun",5);
   Item* rice = newItem("bag of rice",10);
-  Item* beans = newItem("bag of beans"5);
+  Item* beans = newItem("bag of beans",5);
   
   vector<Room*>* roomList = new vector<Room*>(); //Room setup (and naming)
   Room* bedroom1 = newRoom("bedroom (1)",roomList);
