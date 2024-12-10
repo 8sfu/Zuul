@@ -46,10 +46,11 @@ void listInv(vector<Item*> inventory){
   if(inventory.size()){
     cout << "You have " << endl;
     for(Item* item : inventory){
-      cout << item << "   " << endl;
+      cout << "   " << item;
     }
+    cout ".   " << endl << endl;
   } else {
-    cout << "There is nothing in your inventory" << endl;
+    cout << "There is nothing in your inventory." << endl << endl;
   }
 }
 
@@ -146,8 +147,6 @@ int main() {
   master->setExit("south",masterCloset);
   masterBath->setExit("north",master);
   masterCloset->setExit("north",master);
-
-
 
   bool running = true;
   bool restart = false;
