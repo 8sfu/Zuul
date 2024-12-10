@@ -15,9 +15,10 @@ Room* newRoom(const char* newName, vector<Room*>* roomList){ //Create a new room
   return roomPtr;
 }
 
-Item* newItem(const char* newName){ //Create a new item, name it, and return its pointer
+Item* newItem(const char* newName, double newWeight){ //Create a new item, name it, and return its pointer
   Item* itemPtr = new Item();
   itemPtr->name = (char*)newName;
+  itemPtr->weight = newWeight;
   return itemPtr;
 } 
 
@@ -74,8 +75,9 @@ int main() {
   cout << endl << "Welcome to Zuul" << endl << endl;
   vector<Item*> inventory; //Inventory of items
 
-  Item* shovel = newItem("shovel");  //Item setup
-  Item* cat = newItem("cat");
+  Item* wrench = newItem("wrench",0.5);  //Item setup
+  Item* backpack = newItem("backpack",1.5);
+  Item* cat = newItem("cat",3.5);
   
   vector<Room*>* roomList = new vector<Room*>(); //Room setup (and naming)
   Room* bedroom1 = newRoom("bedroom (1)",roomList);
@@ -146,8 +148,6 @@ int main() {
   masterCloset->setExit("north",master);
 
 
-
-  kitchen->putItem(shovel); //Set items where appropriate
 
   bool running = true;
   bool restart = false;

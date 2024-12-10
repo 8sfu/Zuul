@@ -26,7 +26,7 @@ void Room::describeRoom(){
   cout << "You are in the " << name << "." << endl;
   
   for(Item* item : itemList){
-    cout << "There is a " << item->name << " here." << endl;
+    cout << "There is a " << item->name << " (weight: " << item->weight << "kg) here." << endl;
   }
 
   for(pair<const char*, Room*> exit : exits) {
