@@ -11,17 +11,28 @@ void Room::setName(const char* setName){
   return;
 }
 
+void Room::putItem(Item* item){
+  itemList.push_back(item);
+  return;
+}
+
+void Room::setExit(const char* direction, Room* exitRoom){
+  exits.insert(pair<const char*, Room*>(direction, exitRoom));
+  return;
+}
+
+
 void Room::describeRoom(){
   cout << "You are in the " << name << "." << endl;
   
-
   for(Item* item : itemList){
     cout << "There is a " << item->name << " here." << endl;
   }
-  
-  for(map<const char*,Room>::iterator it = exits.begin(); it != exits.end(); ++it){
-    cout << it->second << endl;
-  }
 
+  for(pair<const char*, Room*> exit : exits) {
+    cout << "There is a " << exit.second->name << " to the " << exit.first << "." << endl;
+  }
+  cout << endl;
   return;
 }
+

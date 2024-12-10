@@ -11,11 +11,12 @@ class Room {
  public:
   char* name;
   vector<Item*> itemList;
-  map<const char*, Room> exits;
+  multimap<const char*, Room*> exits;
   //vector of item pointers
   //  map<int, Room> exits;
   void setName(const char* setName);
-  void initItem(const char* itemName);
+  void putItem(Item* item);
+  void setExit(const char* direction, Room* exitRoom);
   void describeRoom();
 };
 
