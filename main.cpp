@@ -126,10 +126,14 @@ int main() {
   vector<Item*>* inventory = new vector<Item*>();
   double* invWeight = new double(0);
 
-  Item* wrench = newItem("wrench",0.5);  //Item setup
-  Item* backpack = newItem("backpack",1.5);
-  Item* cat = newItem("cat",3.5);
+  Item* wrench = newItem("wrench",0.86);  //Item setup
+  Item* backpack = newItem("backpack",0.5);
+  Item* cat = newItem("freddy the maine coon",7.2);
+  Item* catFood = newItem("cat food",1.0);
   Item* debug = newItem("debug",30);
+  Item* gun = newItem("chekhov's gun",5);
+  Item* rice = newItem("bag of rice",10);
+  Item* beans = newItem("bag of beans"5);
   
   vector<Room*>* roomList = new vector<Room*>(); //Room setup (and naming)
   Room* bedroom1 = newRoom("bedroom (1)",roomList);
