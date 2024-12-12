@@ -9,7 +9,7 @@ using namespace std;
 
 class Room {
  public:
-  char* name;
+  char* name = new char[20];
   vector<Item*> itemList;
   multimap<const char*, Room*> exits;
   //vector of item pointers

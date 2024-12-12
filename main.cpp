@@ -5,6 +5,7 @@
 #include <iomanip>
 #include "room.h"
 #include "item.h"
+#include "cat.h"
 #include "progression.h"
 
 using namespace std;
@@ -24,10 +25,19 @@ Item* newItem(const char* newName, double newWeight){ //Create a new item, name 
 } 
 
 
+Cat* newCat(const char* newName, double newWeight){ //Create a new item, name it, and return its pointer
+  Cat* catPtr = new Cat();
+  catPtr->name = (char*)newName;
+  catPtr->weight = newWeight;
+  return catPtr;
+}
+
 void help(vector<Item*>* inventory){ //Print out all possible commands
   cout <<"h - See commands list." << endl;
   cout << "q - Quit game." << endl;
   cout << "r - Restart game." << endl;
+  cout << "y - Yes." << endl;
+  cout << "n - No." << endl;
   cout << "d - Describe the current room." << endl;
   cout << "e - List current inventory." << endl;
   cout << "i - Progression hint." << endl;
@@ -67,11 +77,20 @@ void listInv(vector<Item*>* inventory,double* totalWeight){ //NEED TO PRINT TOTA
 }
 
 
-Room* move(Room* currentRoom, const char* moveName){
+Room* move(Room* currentRoom, const char* moveName, Progression* progression){
   for(pair<const char*, Room*> exit : currentRoom->exits){
     if(!strcmp(exit.second->name,moveName)){
-      exit.second->describeRoom();
-      return exit.second;
+      if(strcmp(moveName,(char*)"elevator")){
+	exit.second->describeRoom();
+	return exit.second;
+      } else {
+	if(progression->elevatorFix){
+	  exit.second->describeRoom();
+	  return exit.second;
+	} else {
+	  cout << "The elevator hasn't been fixed yet. ";
+	}
+      }
     }
   }
   cout << "You can't go there." << endl << endl;
@@ -80,18 +99,33 @@ Room* move(Room* currentRoom, const char* moveName){
 
 void grab(Room* currentRoom, const char* itemName, vector<Item*>* inventory, double* invWeight, Progression* progression){
   vector<Item*>::iterator it;
-  for(it = currentRoom->itemList.begin(); it != currentRoom->itemList.end(); ++it){
-    if(!strcmp((*it)->name,itemName)){
-      cout << "You have grabbed " << itemName << " (Weight: " << (*it)->weight << "kg)." << endl << endl;
-      if(!strcmp(itemName,"wrench")){
-	  progression->hasWrench = true;
+  if(progression->hasPack || inventory->size() == 0){
+    for(it = currentRoom->itemList.begin(); it != currentRoom->itemList.end(); ++it){
+      if((*it)->weight + *invWeight <= 80){
+	if(!strcmp((*it)->name,itemName)){
+	  cout << "You have grabbed " << itemName << " (Weight: " << (*it)->weight << "kg)." << endl << endl;
+	  if(!strcmp(itemName,"wrench")){
+	    progression->hasWrench = true;
+	  }
+	  if(!strcmp(itemName,"backpack")){
+	    progression->hasPack = true;
+	  } else {
+	    inventory->push_back(*it);
+	    
+	  }
+	  *invWeight += (*it)->weight;
+	  currentRoom->itemList.erase(it);
+	  --it;
+	  return;
 	}
-      *invWeight += (*it)->weight;
-      inventory->push_back(*it);
-      currentRoom->itemList.erase(it);
-      --it;
-      return;
+      } else {
+	cout << "You can't carry that much combined weight." << endl << endl;
+	return;
+      }
     }
+  } else {
+    cout << "You need a backpack to carry more than one item." << endl << endl;
+    return;
   }
   cout << "You can't pick that up." << endl << endl;
   return;
@@ -113,11 +147,43 @@ void drop(Room* currentRoom, const char* itemName, vector<Item*>* inventory, dou
   return;
 }
 
+void useTool(vector<Item*>* inventory, Progression* progression, Room* currentRoom){
+  for(Item* item : *inventory) {
+    if(!strcmp(item->name,(char*)"wrench")){
+      if(!strcmp(currentRoom->name,(char*)"foyer")){
+	if(!progression->elevatorFix){
+	  progression->elevatorFix = true;
+	  item->name = (char*)"broken wrench";
+	  cout << "You fixed the elevator." << endl << endl;
+	} else {
+	  cout << "You already fixed the elevator and broke your wrench. (Press i if you are stuck.)" << endl << endl;
+	}
+      } else {
+	cout << "You need to be in the foyer to fix the elevator." << endl << endl;
+      }
+    } else {
+      cout << "You need a wrench for that." << endl << endl;
+    }
+  }
+}
+
 void help(Progression* progression){
-  if(progression->hasWrench){
-    cout << "Take the elevator to the bunker." << endl << endl;
+  if (!progression->hasCat) {
+    cout << "Bring freddy with you to the bunker, but don't forget to feed him." << endl << endl;
+  } else if(progression->hasWrench){
+    cout << "Use the wrench to fix the elevator." << endl << endl;
   } else {
     cout << "Fetch the wrench from the supply closet." << endl << endl;
+  }
+}
+
+bool winCheck(Progression* progression){
+  if(!progression->hasCat){
+    cout << "You didn't bring freddy the beloved maine coon with you, so you died of grief." << endl;
+    return false;
+  } else {
+    cout << "You win!" << endl;
+    return true;
   }
 }
 
@@ -128,9 +194,9 @@ int main() {
 
   Item* wrench = newItem("wrench",0.86);  //Item setup
   Item* backpack = newItem("backpack",0.5);
-  Item* cat = newItem("freddy the maine coon",7.2);
-  Item* catFood = newItem("cat food",1.0);
-  Item* debug = newItem("debug",30);
+  Cat* cat = newCat("freddy the maine coon",7.2);
+  Item* catFood = newItem("cat food",0.25);
+  Item* debug = newItem("debug",99.999999999999999999999999999);
   Item* gun = newItem("chekhov's gun",5);
   Item* rice = newItem("bag of rice",10);
   Item* beans = newItem("bag of beans",5);
@@ -196,6 +262,7 @@ int main() {
   foyer->setExit("south",elevator);
   foyer->setExit("north",livingRoom);
   foyer->setExit("south",diningRoom);
+  foyer->setExit("south",office);
   foyer->setExit("west",master);
   diningRoom->setExit("north",foyer);
   office->setExit("north",foyer);
@@ -209,6 +276,7 @@ int main() {
   office->putItem(backpack);
   bedroom1->putItem(cat);
   foyer->putItem(debug);
+  kitchen->putItem(catFood);
   
   bool running = true;
   bool restart = false;
@@ -233,6 +301,7 @@ int main() {
 	if(cmp(input,"y")){
 	  restart = true;
 	}
+	cout << endl;
       } else if (cmp(input,"d")) {
 	currentRoom->describeRoom();
       } else if (cmp(input,"e")) {
@@ -240,7 +309,7 @@ int main() {
       } else if (cmp(input,"go")) {
 	cout << "Where do you want to go?" << endl;
 	cin.getline(input,20);
-	currentRoom = move(currentRoom,input);
+	currentRoom = move(currentRoom,input,progression);
       } else if (cmp(input,"grab")) {
 	cout << "What do you want to grab?" << endl;
 	cin.getline(input,20);
@@ -251,10 +320,12 @@ int main() {
 	drop(currentRoom,input,inventory,invWeight);
       } else if (cmp(input,"i")) {
 	help(progression);
+      } else if (cmp(input,"w")) {
+	useTool(inventory,progression,currentRoom);
       }
       if(currentRoom == elevator){
+	winCheck(progression);
 	running = false;
-	cout << "You win!" << endl;
       }
     }
   } while(restart == true);

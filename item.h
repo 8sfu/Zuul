@@ -6,7 +6,7 @@ using namespace std;
 
 class Item {
  public:
-  char* name;
+  char* name = new char[20];
   double weight;
 };
 

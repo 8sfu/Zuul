@@ -5,6 +5,9 @@ class Progression {
  public:
   bool hasWrench = false;
   bool elevatorFix = false;
+  bool hasPack = false;
+  bool fedCat = false;
+  bool hasCat = false;
 };
 
 #endif
