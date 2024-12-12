@@ -1,0 +1,1 @@
+The goal is to fix an elevator and bring a cat and various resources down to the bunker because there is an impending doompocalypse of scary proportions. The code still needs significant amounts of commenting, and currently the game loop cuts off after you fix the elevator.
