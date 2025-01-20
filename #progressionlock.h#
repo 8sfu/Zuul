@@ -1,0 +1,8 @@
+#ifndef PROGRESSION_H
+#define PROGRESSION_H
+
+class Progression {
+  
+}
+
+#endif

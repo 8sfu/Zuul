@@ -8,6 +8,9 @@ class Progression {
   bool hasPack = false;
   bool fedCat = false;
   bool hasCat = false;
+  bool hasCatFood = true;
+  bool hasGun = false;
+  bool hasFood = false;
 };
 
 #endif

@@ -235,7 +235,7 @@ bool endGame(vector<Item*>* inventory){ //Return true or false depending on rele
 }
 
 int main() {
-  cout << endl << "Welcome to Zuul! You are in the midst of a zombie apocalypse and need to retreat to your basement." << endl << endl;
+  cout << endl << "Welcome to Zuul" << endl << endl;
   vector<Item*>* inventory = new vector<Item*>();
   double* invWeight = new double(0);
 
