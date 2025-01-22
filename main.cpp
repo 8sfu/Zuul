@@ -188,12 +188,8 @@ void useTool(vector<Item*>* inventory, Progression* progression, Room* currentRo
 }
 
 void help(Progression* progression){ //Hints based on current stage of progression
-  if(progression->hasFood){
-    cout << "Don't forget to bring food to the bunker." << endl << endl;
-  } else if(progression->hasGun){
-    cout << "Don't forget to bring the gun to the bunker." << endl << endl;
-  } else if(progression->fedCat){ 
-    cout << "Bring freddy with you." << endl << endl;
+  if(progression->fedCat){ 
+    cout << "Bring freddy with you, and grab food and guns on your way to the bunker." << endl << endl;
   } else if(progression->hasCatFood){
     cout << "Check out the bedrooms." << endl;
   } else if(progression->elevatorFix){
@@ -225,9 +221,9 @@ bool endGame(vector<Item*>* inventory){ //Return true or false depending on rele
   }
   if(notHasCat){
     cout << "You didn't bring freddy the beloved maine coon and consequently died of grief." << endl;
-  } else if (notHasRice || notHasBeans) {
+  } else if (notHasRice || notHasBean) {
     cout << "You didn't bring enough food, and starved." << endl;
-  } else if (nothasGun) {
+  } else if (notHasGun) {
     cout << "You didn't bring your gun, and after your food ran out, you were forced to live out the remainder of your weeks in a state of starvation." << endl;
   }
   bool done = !(notHasCat + notHasGun + notHasRice + notHasBean); //boolean arithmetic to check that all win conditions
@@ -235,7 +231,7 @@ bool endGame(vector<Item*>* inventory){ //Return true or false depending on rele
 }
 
 int main() {
-  cout << endl << "Welcome to Zuul! You are in the midst of a zombie apocalypse and need to retreat to your basement." << endl << endl;
+  cout << endl << "Welcome to Zuul" << endl << endl;
   vector<Item*>* inventory = new vector<Item*>();
   double* invWeight = new double(0);
 
